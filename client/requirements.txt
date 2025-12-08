@@ -1,0 +1,10 @@
+axios
+bcrypt
+motion
+react
+react-dom
+react-router-dom
+react-toastify
+tailwindcss
+@tailwindcss/vite
+

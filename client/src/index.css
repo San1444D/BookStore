@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+
+
+/* font-family: "Outfit", sans-serif; */
+@import "tailwindcss";
+
+@theme {
+    --color-primary-home: #FEEBE6 ;
+    --color-primary-btn: #d14132;
+    --color-tecxt-primary: #000000;
+    --color-text-primary-light: #999999;
+    --color-text-primary-gray: #555555;
+    --font-heading: "Times New Roman", serif;
+
+    --color-admin-home: #e2e8fe;
+    --color-admin-btn: #2563eb;
+    
+}
+
+@keyframes drop-bounce {
+  0%   { transform: translateY(-120px); opacity: 0; }
+  50%  { transform: translateY(0);      opacity: 1; }
+  65%  { transform: translateY(-30px); }
+  80%  { transform: translateY(0); }
+  90%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@utility drop-bounce {
+  animation: drop-bounce 1.1s ease-out forwards;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+  @apply bg-[#feebe7] min-h-screen;
+}
+
+/* home page top rates section  */
+.marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marquee__track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Optional pause on hover */
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+
+
+
