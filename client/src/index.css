@@ -12,8 +12,8 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary-home: #FEEBE6 ;
-    --color-primary-btn: #d14132;
+    --color-primary-home: #caffb9;
+    --color-primary-btn: #2E4057;
     --color-tecxt-primary: #000000;
     --color-text-primary-light: #999999;
     --color-text-primary-gray: #555555;
