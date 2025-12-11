@@ -8,7 +8,7 @@ import AppContextProvider from "./context/AppContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/BookStore">
       <AppContextProvider>
         <App />
       </AppContextProvider>
