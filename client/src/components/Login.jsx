@@ -79,9 +79,9 @@ import { useNavigate } from "react-router-dom";
           setShowLogin(false);
           toast.success("Account created successfully");
 
-          if (data.role === "ADMIN") window.location.href = "/admin";
-          else if (data.role === "SELLER") window.location.href = "/seller";
-          else window.location.href = "/";
+          if (data.role === "ADMIN") navigate("/admin");
+          else if (data.role === "SELLER") navigate("/seller");
+          else navigate("/");
         }
       } catch (error) {
         toast.error(error.response?.data?.message || "Something went wrong");

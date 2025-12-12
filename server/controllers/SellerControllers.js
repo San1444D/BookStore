@@ -40,15 +40,26 @@ export const createBook = async (req, res) => {
     if (req.file) {
       // FIXED: Proper upload_stream with promise
       itemImageUrl = await new Promise((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
-            { folder: `bookstore/sellers/${sellerId}` },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result.secure_url);
-            }
-          )
-          .end(req.file.buffer);
+        const folderPath = `bookstore/sellers/${sellerId}`;
+        const timestamp = Math.round(Date.now() / 1000);
+
+        const signature = cloudinary.utils.api_sign_request(
+          { folder: folderPath, timestamp },
+          process.env.CLOUDINARY_API_SECRET
+        );
+
+        cloudinary.uploader.upload_stream(
+          {
+            folder: folderPath,
+            timestamp,
+            signature,
+            api_key: process.env.CLOUDINARY_API_KEY
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        ).end(req.file.buffer);
       });
     }
 
@@ -162,17 +173,17 @@ export const updateSellerBook = async (req, res) => {
     if (updates.price !== undefined) book.price = updates.price;
     if (updates.description !== undefined) book.description = updates.description;
     if (updates.pages !== undefined) book.pages = updates.pages;
-    
+
     // Handle genres (string → array)
     if (updates.genres !== undefined) {
       book.genres = Array.isArray(updates.genres)
         ? updates.genres
         : updates.genres
-            .split(",")
-            .map(g => g.trim())
-            .filter(Boolean);
+          .split(",")
+          .map(g => g.trim())
+          .filter(Boolean);
     }
-    
+
     // Cloudinary URL (full URL)
     if (updates.itemImage !== undefined) {
       book.itemImage = updates.itemImage;
@@ -219,9 +230,9 @@ export const getSellerBookById = async (req, res) => {
     const { id } = req.params;
     const sellerId = req.user.id;
 
-    const book = await bookModel.findOne({ 
-      _id: id, 
-      sellerId 
+    const book = await bookModel.findOne({
+      _id: id,
+      sellerId
     }).populate('sellerId', 'name storeName');
 
     if (!book) {
@@ -241,7 +252,7 @@ export const updateBookImage = async (req, res) => {
   try {
     const { id } = req.params;
     const sellerId = req.user.id;
-    
+
     if (!req.file) {
       return res.status(400).json({ message: "No image uploaded" });
     }
@@ -261,8 +272,8 @@ export const updateBookImage = async (req, res) => {
     book.itemImage = req.file.filename;
     await book.save();
 
-    res.json({ 
-      message: "Image updated", 
+    res.json({
+      message: "Image updated",
       imageName: req.file.filename,
       imageUrl: `/images/books/${req.file.filename}`
     });
@@ -292,11 +303,11 @@ export const updateSellerOrderStatus = async (req, res) => {
     }
 
     console.log(`✅ Order ${id} updated to ${status}`);
-    
-    res.json({ 
+
+    res.json({
       message: `Status updated to ${status}`,
       orderId: id,
-      status 
+      status
     });
   } catch (err) {
     console.error("❌ Order update error:", err);
