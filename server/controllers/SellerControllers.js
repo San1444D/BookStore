@@ -1,4 +1,6 @@
 // controllers/SellerController.js
+import dotenv from "dotenv";
+dotenv.config();
 import bookModel from "../models/Seller/BookSchema.js";
 import sellerModel from "../models/Seller/SellerSchema.js";
 import orderModel from "../models/Users/OrderSchema.js";
@@ -40,27 +42,18 @@ export const createBook = async (req, res) => {
     if (req.file) {
       // FIXED: Proper upload_stream with promise
       itemImageUrl = await new Promise((resolve, reject) => {
-        const folderPath = `bookstore/sellers/${sellerId}`;
-        const timestamp = Math.round(Date.now() / 1000);
-
-        const signature = cloudinary.utils.api_sign_request(
-          { folder: folderPath, timestamp },
-          process.env.CLOUDINARY_API_SECRET
-        );
-
-        cloudinary.uploader.upload_stream(
-          {
-            folder: folderPath,
-            upload_preset: "unsigned_books",
-            timestamp,
-            signature,
-            api_key: process.env.CLOUDINARY_API_KEY
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result.secure_url);
-          }
-        ).end(req.file.buffer);
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: `bookstore/sellers/${sellerId}`,
+              upload_preset: "unsigned_books",
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result.secure_url);
+            }
+          )
+          .end(req.file.buffer);
       });
     }
 
