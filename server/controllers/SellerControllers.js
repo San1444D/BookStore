@@ -51,6 +51,7 @@ export const createBook = async (req, res) => {
         cloudinary.uploader.upload_stream(
           {
             folder: folderPath,
+            upload_preset: "unsigned_books",
             timestamp,
             signature,
             api_key: process.env.CLOUDINARY_API_KEY
